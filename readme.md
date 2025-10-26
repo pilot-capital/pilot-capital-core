@@ -1,6 +1,12 @@
-# Pilot Capital — Monorepo Template
+# Pilot Capital — Monorepo
 
-A friendly, practical README template for a monorepo that hosts one or more web applications and shared packages. This document explains repository layout, recommended tech-stack options, common scripts, development flows, and tips for maintaining a healthy monorepo.
+This monorepo contains:
+
+-   `apps/web`: Vite + React + TypeScript frontend, using React Router for navigation and a sample folder structure (`components`, `pages`, `hooks`, `assets`, `styles`, `utils`).
+-   `apps/api`: Django backend, configured for PostgreSQL and Django REST Framework.
+-   `packages`: (optional) for shared code/libraries.
+
+It is set up for modern fullstack development, with clear separation between frontend and backend, and ready for local development and deployment.
 
 ---
 
@@ -24,49 +30,37 @@ A friendly, practical README template for a monorepo that hosts one or more web 
 
 ## Repository layout
 
-This is a common, flexible layout. Adjust to fit your needs.
-
--   `apps/` — top-level applications (e.g., `web`, `admin`, `api`). Each app is independently buildable and runnable.
--   `packages/` — shared libraries: UI components, utilities, types, API clients, hooks, etc.
--   `tools/` — repository tooling (scripts, generator templates, code mods).
--   `infra/` — IaC and deployment configs (optional).
--   `scripts/` — convenience scripts for monorepo tasks (optional).
--   `package.json` / `pnpm-workspace.yaml` / `turbo.json` / `nx.json` — monorepo configuration files at repo root.
-
-Example:
-
 ```
 /
 ├─ apps/
-│  ├─ web/           # customer-facing web app
-│  ├─ admin/         # internal admin UI
-│  └─ api/           # backend application or serverless functions
-├─ packages/
-│  ├─ ui/            # shared React/Vue components
-│  ├─ config/        # shared config/constants
-│  └─ utils/         # shared utilities
-├─ infra/
-├─ package.json
+│  ├─ web/           # Vite + React + TypeScript frontend
+│  │   └─ src/
+│  │       ├─ components/
+│  │       ├─ pages/
+│  │       ├─ hooks/
+│  │       ├─ assets/
+│  │       ├─ styles/
+│  │       └─ utils/
+│  └─ api/           # Django backend (PostgreSQL, REST Framework)
+├─ packages/         # Shared code (optional)
 ├─ pnpm-workspace.yaml
-└─ README.md
+├─ README.md
+└─ GETTING_STARTED.md
 ```
 
 ## Tech stack options
 
 Below are recommended combinations for different priorities. Use one column from each category (frontend / backend / infra) to compose a stack.
 
-Frontend choices
+Frontend
 
--   React (recommended): Next.js (SSR/SSG), Create React App / Vite for single-page apps.
--   Vue: Nuxt (meta-framework) or Vite + Vue 3.
--   Svelte: SvelteKit for full-stack or Svelte + Vite for SPA.
+-   Vite + React + TypeScript (SPA, fast dev, modern tooling)
+-   React Router for navigation between pages
 
-Backend choices
+Backend
 
--   Node.js / TypeScript: Express, Fastify, NestJS (structured), or serverless (Vercel, AWS Lambda).
--   Django (Python): Robust, batteries-included backend for REST APIs or server-side rendering. Integrates well with React frontends via Django REST Framework or GraphQL (Graphene).
--   Go: tiny, fast services (useful where performance and binary distribution matter).
--   Deno: if you prefer a secure runtime with first-class TypeScript.
+-   Django (Python) with Django REST Framework
+-   PostgreSQL database
 
 Monorepo tooling
 
@@ -74,19 +68,17 @@ Styling & UI
 
 Testing & QA
 
-Example recommended stacks
+Example stack in this repo:
 
--   React + Django (classic fullstack): Vite + React + TypeScript frontend, Django backend (REST API via Django REST Framework).
+-   Vite + React + TypeScript + React Router frontend
+-   Django + Django REST Framework + PostgreSQL backend
 
-**React + Django integration notes:**
+**Integration notes:**
 
--   Structure: Place your frontend in `apps/web` (Vite + React + TypeScript) and backend in `apps/api` (Django project).
--   Communication: Use REST or GraphQL APIs (Django REST Framework or Graphene) for frontend-backend interaction.
--   Local dev: Run React dev server (e.g., port 3000) and Django server (e.g., port 8000) concurrently. Configure CORS in Django for local development.
--   Auth: Use JWT or session-based authentication. Django can manage users and expose auth endpoints for React.
--   Deployment: Deploy frontend and backend separately (e.g., Vercel/Netlify for React, Heroku/AWS for Django) or together using Docker Compose.
-
-This setup is ideal for teams wanting a modern JS UI with a robust Python backend. Shared code can be managed in `packages/` (TypeScript) and optionally in a `python-packages/` folder for Django apps/libraries.
+-   Frontend and backend run independently in local dev (`pnpm dev` for React, `python manage.py runserver` for Django)
+-   API requests from React to Django (CORS may need configuration)
+-   Environment variables managed via `.env` files in each app
+-   PostgreSQL setup instructions in `GETTING_STARTED.md`
 
 Pros/cons table (short):
 
@@ -120,15 +112,13 @@ Common scripts (root `package.json`):
 -   `pnpm build` — build all projects.
 -   `pnpm test` — run tests across workspace.
 
-Local development (recommendation)
+Local development
 
-1. Install dependencies (see above).
-2. Start shared services if needed (databases, mocks).
-3. Start the app(s) you work on, e.g. `pnpm --filter apps/web dev`.
-
-Notes about Windows PowerShell:
-
--   Use the `pnpm` commands as-is in PowerShell. If you use cross-platform scripts, prefer `cross-env` for environment variables.
+1. Install dependencies (see above)
+2. Start React frontend: `cd apps/web && pnpm dev`
+3. Start Django backend: `cd apps/api && python manage.py runserver`
+4. Access frontend at [http://localhost:5173](http://localhost:5173), backend at [http://127.0.0.1:8000](http://127.0.0.1:8000)
+5. See `GETTING_STARTED.md` for full setup and database instructions
 
 ---
 
@@ -213,16 +203,19 @@ Security & secrets
 
 ## Appendix — Examples & tips
 
--   Keep shared ESLint/Prettier configurations under `packages/config` and reference them with `eslint-config-<org>`.
--   Favor TypeScript for shared packages to provide strong contracts between apps.
--   Prefer stable, simple CI steps early; optimize caching later when the pipeline becomes slow.
+-   React app structure: see `apps/web/src` for `components`, `pages`, `hooks`, `assets`, `styles`, `utils`
+-   Routing: handled by React Router in `App.tsx`
+-   Django REST API: see `apps/api/PCCore` for backend config
+-   PostgreSQL setup: see `GETTING_STARTED.md` and `.env.example` in `apps/api`
 
 Minimal checklist before merging PRs
 
--   [ ] Tests pass for affected packages
+-   [ ] Frontend and backend run locally
+-   [ ] Database migrations applied
+-   [ ] API endpoints tested
 -   [ ] Linting passes
 -   [ ] Types compile (if TypeScript)
--   [ ] Changes documented when exposing breaking API changes
+-   [ ] Changes documented
 
 ---
 
