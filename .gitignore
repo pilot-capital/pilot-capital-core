@@ -1,0 +1,66 @@
+
+# Node.js
+node_modules/
+dist/
+build/
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+
+# Django
+*.sqlite3
+/static/
+/media/
+*.pot
+*.pyc
+*.pyo
+*.pyd
+
+# Python virtual environments
+venv/
+.env/
+.envrc
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Monorepo workspace
+apps/*/node_modules/
+apps/*/build/
+apps/*/dist/
+apps/*/venv/
+apps/*/.env
+packages/*/node_modules/
+packages/*/build/
+packages/*/dist/
+
+# pnpm
+pnpm-lock.yaml
+.pnpm-store/
+
+# Misc
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Ignore coverage and test output
+coverage/
+*.cover
+*.coverage
+
+# Ignore IDE files
+.idea/
+*.iml
