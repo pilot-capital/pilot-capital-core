@@ -13,7 +13,8 @@ function App() {
     return (
         <Router>
             <nav style={{ marginBottom: 16 }}>
-                <Link to="/">Main</Link> | <Link to="/home">Home</Link>
+                <Link to="/">Main</Link> | <Link to="/home">Home</Link> |{" "}
+                <Link to="/contact">Contact</Link>
             </nav>
             <Routes>
                 <Route
@@ -57,9 +58,7 @@ function App() {
                     }
                 />
                 <Route path="/home" element={<Home />} />
-                <footer>
-                    <p>© 2025 Pilot Capital. All rights reserved.</p>
-                </footer>
+                <Route path="/contact" element={<div>Contact Page</div>} />
             </Routes>
         </Router>
     );
