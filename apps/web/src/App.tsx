@@ -57,6 +57,9 @@ function App() {
                     }
                 />
                 <Route path="/home" element={<Home />} />
+                <footer>
+                    <p>© 2025 Pilot Capital. All rights reserved.</p>
+                </footer>
             </Routes>
         </Router>
     );
