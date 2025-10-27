@@ -22,7 +22,7 @@ function App() {
                     element={
                         <div>
                             <Helmet>
-                                <title>Pilot Capital Main</title>
+                                <title>🇰🇾 Pilot Capital Main</title>
                                 <meta
                                     name="description"
                                     content="Main page of Pilot Capital application"
@@ -70,13 +70,13 @@ function App() {
                     element={
                         <div>
                             <Helmet>
-                                <title>Pilot Capital Contact</title>
+                                <title>🇰🇾 Pilot Capital Contact</title>
                                 <meta
                                     name="description"
                                     content="Contact page of Pilot Capital application"
                                 />
                             </Helmet>
-                            Contact Page
+                            🇰🇾 Contact Page
                         </div>
                     }
                 />
