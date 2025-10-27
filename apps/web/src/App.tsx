@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import { SampleButton } from "./components/SampleButton";
 import { useSample } from "./hooks/useSample";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import GlobePage from "./pages/GlobePage";
 import { Helmet } from "react-helmet-async";
 
 function App() {
@@ -14,7 +15,8 @@ function App() {
         <Router>
             <nav style={{ marginBottom: 16 }}>
                 <Link to="/">Main</Link> | <Link to="/home">Home</Link> |{" "}
-                <Link to="/contact">Contact</Link>
+                <Link to="/contact">Contact</Link> |{" "}
+                <Link to="/globe">Globe</Link>
             </nav>
             <Routes>
                 <Route
@@ -80,6 +82,7 @@ function App() {
                         </div>
                     }
                 />
+                <Route path="/globe" element={<GlobePage />} />
             </Routes>
         </Router>
     );
