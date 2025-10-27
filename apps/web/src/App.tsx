@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -6,6 +5,7 @@ import Home from "./pages/Home";
 import { SampleButton } from "./components/SampleButton";
 import { useSample } from "./hooks/useSample";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 function App() {
     const { count, increment } = useSample();
@@ -21,6 +21,13 @@ function App() {
                     path="/"
                     element={
                         <div>
+                            <Helmet>
+                                <title>Pilot Capital Main</title>
+                                <meta
+                                    name="description"
+                                    content="Main page of Pilot Capital application"
+                                />
+                            </Helmet>
                             <div>
                                 <a href="https://vite.dev" target="_blank">
                                     <img
@@ -58,7 +65,21 @@ function App() {
                     }
                 />
                 <Route path="/home" element={<Home />} />
-                <Route path="/contact" element={<div>Contact Page</div>} />
+                <Route
+                    path="/contact"
+                    element={
+                        <div>
+                            <Helmet>
+                                <title>Pilot Capital Contact</title>
+                                <meta
+                                    name="description"
+                                    content="Contact page of Pilot Capital application"
+                                />
+                            </Helmet>
+                            Contact Page
+                        </div>
+                    }
+                />
             </Routes>
         </Router>
     );
