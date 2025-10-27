@@ -6,6 +6,9 @@ import { SampleButton } from "./components/SampleButton";
 import { useSample } from "./hooks/useSample";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import GlobePage from "./pages/GlobePage";
+import BlogListPage from "./pages/blog/BlogListPage";
+import BlogCreatePage from "./pages/blog/BlogCreatePage";
+import LoginPage from "./pages/blog/LoginPage";
 import { Helmet } from "react-helmet-async";
 
 function App() {
@@ -16,7 +19,10 @@ function App() {
             <nav style={{ marginBottom: 16 }}>
                 <Link to="/">Main</Link> | <Link to="/home">Home</Link> |{" "}
                 <Link to="/contact">Contact</Link> |{" "}
-                <Link to="/globe">Globe</Link>
+                <Link to="/globe">Globe</Link> |{" "}
+                <Link to="/blog">Blog List</Link> |{" "}
+                <Link to="/blog/create">Create Blog</Link> |{" "}
+                <Link to="/login">Login</Link>
             </nav>
             <Routes>
                 <Route
@@ -83,6 +89,9 @@ function App() {
                     }
                 />
                 <Route path="/globe" element={<GlobePage />} />
+                <Route path="/blog" element={<BlogListPage />} />
+                <Route path="/blog/create" element={<BlogCreatePage />} />
+                <Route path="/login" element={<LoginPage />} />
             </Routes>
         </Router>
     );
