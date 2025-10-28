@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { login } from "../../api/blogApi";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/authContext";
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState("");
@@ -8,6 +9,7 @@ const LoginPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { login: setAuthenticated } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -15,7 +17,8 @@ const LoginPage: React.FC = () => {
         setError(null);
         try {
             await login(username, password);
-            navigate("/blog");
+            setAuthenticated();
+            navigate("/dashboard");
         } catch (err: any) {
             setError(err.message);
         } finally {

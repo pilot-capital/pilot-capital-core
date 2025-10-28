@@ -10,9 +10,21 @@ import BlogListPage from "./pages/blog/BlogListPage";
 import BlogCreatePage from "./pages/blog/BlogCreatePage";
 import LoginPage from "./pages/blog/LoginPage";
 import { Helmet } from "react-helmet-async";
+import LandingPage from "./pages/LandingPage";
+import ForumPage from "./pages/ForumPage";
+import DashboardPage from "./pages/app/DashboardPage";
+import { useAuth } from "./hooks/authContext";
+import { AuthProvider } from "./hooks/authContext";
+import { Navigate } from "react-router-dom";
 
 function App() {
     const { count, increment } = useSample();
+
+    const { isAuthenticated } = useAuth();
+
+    function PrivateRoute({ children }: { children: React.ReactElement }) {
+        return isAuthenticated ? children : <Navigate to="/login" />;
+    }
 
     return (
         <Router>
@@ -22,7 +34,10 @@ function App() {
                 <Link to="/globe">Globe</Link> |{" "}
                 <Link to="/blog">Blog List</Link> |{" "}
                 <Link to="/blog/create">Create Blog</Link> |{" "}
-                <Link to="/login">Login</Link>
+                <Link to="/login">Login</Link> |{" "}
+                <Link to="/landing">Landing</Link> |{" "}
+                <Link to="/forum">Forum</Link> |{" "}
+                <Link to="/dashboard">Dashboard</Link>
             </nav>
             <Routes>
                 <Route
@@ -92,9 +107,25 @@ function App() {
                 <Route path="/blog" element={<BlogListPage />} />
                 <Route path="/blog/create" element={<BlogCreatePage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/landing" element={<LandingPage />} />
+                <Route path="/forum" element={<ForumPage />} />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <PrivateRoute>
+                            <DashboardPage />
+                        </PrivateRoute>
+                    }
+                />
             </Routes>
         </Router>
     );
 }
 
-export default App;
+export default function AppWithAuthProvider() {
+    return (
+        <AuthProvider>
+            <App />
+        </AuthProvider>
+    );
+}
