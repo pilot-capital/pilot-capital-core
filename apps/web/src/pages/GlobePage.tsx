@@ -32,6 +32,20 @@ const GlobePage: React.FC = () => {
     const [loading] = useState(false);
     const [error] = useState<string | null>(null);
 
+    // Continent interaction states
+    const [hoveredContinent, setHoveredContinent] = useState<string | null>(
+        null
+    );
+    const [selectedContinent, setSelectedContinent] = useState<string | null>(
+        null
+    );
+    const [viewMode, setViewMode] = useState<"continent" | "country">(
+        "continent"
+    );
+    const [hoveredCountry, setHoveredCountry] = useState<CountryFeature | null>(
+        null
+    );
+
     const handleCountryClick = (country: CountryFeature) => {
         setSelectedCountry(country);
         setModalOpen(true);
@@ -167,6 +181,268 @@ const GlobePage: React.FC = () => {
         return { lat: 0, lng: 0, altitude: 1.5 };
     };
 
+    // Continent mapping - maps country codes to continents
+    const continentMapping: { [key: string]: string } = {
+        // North America
+        USA: "North America",
+        CAN: "North America",
+        MEX: "North America",
+        GTM: "North America",
+        CUB: "North America",
+        DOM: "North America",
+        HTI: "North America",
+        HND: "North America",
+        BLZ: "North America",
+        CRI: "North America",
+        PAN: "North America",
+        NIC: "North America",
+        SLV: "North America",
+        JAM: "North America",
+
+        // South America
+        BRA: "South America",
+        ARG: "South America",
+        PER: "South America",
+        COL: "South America",
+        BOL: "South America",
+        VEN: "South America",
+        CHL: "South America",
+        ECU: "South America",
+        URY: "South America",
+        PRY: "South America",
+        GUY: "South America",
+        SUR: "South America",
+        GUF: "South America",
+
+        // Europe
+        RUS: "Europe",
+        FRA: "Europe",
+        ESP: "Europe",
+        SWE: "Europe",
+        DEU: "Europe",
+        FIN: "Europe",
+        NOR: "Europe",
+        POL: "Europe",
+        ITA: "Europe",
+        GBR: "Europe",
+        GRC: "Europe",
+        BGR: "Europe",
+        HUN: "Europe",
+        PRT: "Europe",
+        AUT: "Europe",
+        CZE: "Europe",
+        SRB: "Europe",
+        IRL: "Europe",
+        LTU: "Europe",
+        LVA: "Europe",
+        EST: "Europe",
+        SVK: "Europe",
+        SVN: "Europe",
+        HRV: "Europe",
+        BIH: "Europe",
+        ALB: "Europe",
+        MKD: "Europe",
+        MNE: "Europe",
+        BEL: "Europe",
+        NLD: "Europe",
+        CHE: "Europe",
+        DNK: "Europe",
+        LUX: "Europe",
+        MLT: "Europe",
+        CYP: "Europe",
+        ISL: "Europe",
+        ROU: "Europe",
+        MDA: "Europe",
+        UKR: "Europe",
+        BLR: "Europe",
+
+        // Asia
+        CHN: "Asia",
+        IND: "Asia",
+        KAZ: "Asia",
+        SAU: "Asia",
+        IDN: "Asia",
+        IRN: "Asia",
+        MNG: "Asia",
+        PAK: "Asia",
+        TUR: "Asia",
+        AFG: "Asia",
+        MMR: "Asia",
+        THA: "Asia",
+        UZB: "Asia",
+        IRQ: "Asia",
+        JPN: "Asia",
+        VNM: "Asia",
+        MYS: "Asia",
+        NPL: "Asia",
+        YEM: "Asia",
+        KGZ: "Asia",
+        LAO: "Asia",
+        SYR: "Asia",
+        KHM: "Asia",
+        JOR: "Asia",
+        AZE: "Asia",
+        ARE: "Asia",
+        TJK: "Asia",
+        BGD: "Asia",
+        LKA: "Asia",
+        GEO: "Asia",
+        KOR: "Asia",
+        PRK: "Asia",
+        OMN: "Asia",
+        QAT: "Asia",
+        KWT: "Asia",
+        BHR: "Asia",
+        ARM: "Asia",
+        ISR: "Asia",
+        LBN: "Asia",
+        PSE: "Asia",
+        BTN: "Asia",
+        BRN: "Asia",
+        SGP: "Asia",
+        MDV: "Asia",
+        TKM: "Asia",
+        PHL: "Asia",
+        TWN: "Asia",
+
+        // Africa
+        DZA: "Africa",
+        COD: "Africa",
+        SDN: "Africa",
+        LBY: "Africa",
+        TCD: "Africa",
+        NER: "Africa",
+        AGO: "Africa",
+        MLI: "Africa",
+        ZAF: "Africa",
+        ETH: "Africa",
+        MRT: "Africa",
+        EGY: "Africa",
+        TZA: "Africa",
+        NGA: "Africa",
+        NAM: "Africa",
+        MOZ: "Africa",
+        ZMB: "Africa",
+        SOM: "Africa",
+        CAF: "Africa",
+        MDG: "Africa",
+        BWA: "Africa",
+        KEN: "Africa",
+        CMR: "Africa",
+        MAR: "Africa",
+        UGA: "Africa",
+        GHA: "Africa",
+        BFA: "Africa",
+        SEN: "Africa",
+        TUN: "Africa",
+        MLW: "Africa",
+        ZWE: "Africa",
+        BEN: "Africa",
+        TGO: "Africa",
+        SLE: "Africa",
+        LBR: "Africa",
+        CIV: "Africa",
+        GIN: "Africa",
+        GNB: "Africa",
+        GAB: "Africa",
+        GNQ: "Africa",
+        COG: "Africa",
+        RWA: "Africa",
+        BDI: "Africa",
+        DJI: "Africa",
+        ERI: "Africa",
+        GMB: "Africa",
+        CPV: "Africa",
+        COM: "Africa",
+        MUS: "Africa",
+        SYC: "Africa",
+        STP: "Africa",
+        LSO: "Africa",
+        SWZ: "Africa",
+
+        // Oceania
+        AUS: "Oceania",
+        PNG: "Oceania",
+        NZL: "Oceania",
+        FJI: "Oceania",
+        NCL: "Oceania",
+        SLB: "Oceania",
+        VUT: "Oceania",
+        PYF: "Oceania",
+        WSM: "Oceania",
+        KIR: "Oceania",
+        FSM: "Oceania",
+        TON: "Oceania",
+        PLW: "Oceania",
+        COK: "Oceania",
+        NRU: "Oceania",
+        TUV: "Oceania",
+        MHL: "Oceania",
+    };
+
+    // Continent center points for focusing
+    const continentCenters: {
+        [key: string]: { lat: number; lng: number; altitude: number };
+    } = {
+        "North America": { lat: 45, lng: -100, altitude: 2.5 },
+        "South America": { lat: -15, lng: -60, altitude: 2.5 },
+        Europe: { lat: 50, lng: 10, altitude: 2.2 },
+        Asia: { lat: 30, lng: 100, altitude: 3.0 },
+        Africa: { lat: 0, lng: 20, altitude: 2.8 },
+        Oceania: { lat: -25, lng: 140, altitude: 2.5 },
+    };
+
+    // Get continent for a country
+    const getContinent = (countryCode: string): string | null => {
+        return continentMapping[countryCode] || null;
+    };
+
+    // Handle hover (continent or country mode)
+    const handlePolygonHover = (polygon: any) => {
+        if (!polygon) {
+            // Clear all hover states when no polygon
+            setHoveredContinent(null);
+            setHoveredCountry(null);
+            return;
+        }
+
+        const countryCode =
+            polygon?.properties?.iso_a3 ||
+            polygon?.properties?.["ISO3166-1-Alpha-3"];
+        const continent = getContinent(countryCode);
+
+        if (viewMode === "continent") {
+            setHoveredContinent(continent);
+            setHoveredCountry(null);
+        } else {
+            // Country mode - set hovered country
+            setHoveredCountry(polygon as CountryFeature);
+            setHoveredContinent(null);
+        }
+    };
+
+    // Handle continent click
+    const handleContinentClick = (polygon: any) => {
+        if (viewMode === "continent") {
+            const countryCode =
+                polygon?.properties?.iso_a3 ||
+                polygon?.properties?.["ISO3166-1-Alpha-3"];
+            const continent = getContinent(countryCode);
+            if (continent) {
+                setSelectedContinent(continent);
+                setViewMode("country");
+                // Focus on continent
+                const center = continentCenters[continent];
+                if (center && globeRef.current) {
+                    globeRef.current.pointOfView(center, 1200);
+                }
+            }
+        } else {
+            // Country mode - existing country click behavior
+            handleCountryClick(polygon);
+        }
+    };
+
     // Rotate globe to selected country
     useEffect(() => {
         if (selectedCountry && globeRef.current) {
@@ -184,26 +460,119 @@ const GlobePage: React.FC = () => {
             style={{
                 background:
                     "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)",
-                minHeight: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
+                height: "calc(100vh - 80px)",
+                width: "100vw",
+                position: "fixed",
+                top: "80px",
+                left: 0,
+                right: 0,
                 fontFamily: "'Courier New', monospace",
+                overflow: "hidden",
             }}
         >
+            {/* Optional title - positioned absolutely so it doesn't affect globe layout */}
             <h1
                 style={{
-                    color: "#00ff88",
-                    textShadow: "0 0 20px #00ff88, 0 0 40px #00ff88",
-                    fontSize: "2.5rem",
-                    marginBottom: "2rem",
+                    position: "absolute",
+                    top: "20px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    color: "#9d4edd",
+                    textShadow: "0 0 20px #9d4edd, 0 0 40px #9d4edd",
+                    fontSize: "1.5rem",
+                    margin: 0,
                     textTransform: "uppercase",
                     letterSpacing: "0.2rem",
+                    zIndex: 10,
+                    pointerEvents: "none",
                 }}
             >
                 ◉ PILOT GLOBE ◉
             </h1>
+
+            {/* Mode and continent info display */}
+            <div
+                style={{
+                    position: "absolute",
+                    top: "60px",
+                    left: "20px",
+                    color: "#9d4edd",
+                    background: "rgba(0,0,0,0.8)",
+                    padding: "10px 15px",
+                    borderRadius: "8px",
+                    border: "1px solid #9d4edd",
+                    zIndex: 15,
+                    fontSize: "0.9rem",
+                    maxWidth: "250px",
+                }}
+            >
+                <div>
+                    Mode:{" "}
+                    <strong>
+                        {viewMode === "continent"
+                            ? "Continent Selection"
+                            : "Country Selection"}
+                    </strong>
+                </div>
+                {selectedContinent && (
+                    <div>
+                        Continent: <strong>{selectedContinent}</strong>
+                    </div>
+                )}
+                {hoveredContinent && viewMode === "continent" && (
+                    <div>
+                        Hover: <strong>{hoveredContinent}</strong>
+                    </div>
+                )}
+                <div
+                    style={{
+                        marginTop: "8px",
+                        fontSize: "0.8rem",
+                        opacity: 0.8,
+                    }}
+                >
+                    {viewMode === "continent"
+                        ? "Hover over continents, click to explore countries"
+                        : "Click countries for details"}
+                </div>
+            </div>
+
+            {/* Back button when in country mode */}
+            {viewMode === "country" && (
+                <button
+                    onClick={() => {
+                        setViewMode("continent");
+                        setSelectedContinent(null);
+                        setSelectedCountry(null);
+                        // Reset globe view
+                        if (globeRef.current) {
+                            globeRef.current.pointOfView(
+                                { lat: 0, lng: 0, altitude: 2.5 },
+                                1200
+                            );
+                        }
+                    }}
+                    style={{
+                        position: "absolute",
+                        top: "60px",
+                        right: "20px",
+                        background:
+                            "linear-gradient(135deg, #9d4edd 0%, #c77dff 100%)",
+                        color: "#000",
+                        border: "none",
+                        padding: "10px 20px",
+                        borderRadius: "25px",
+                        cursor: "pointer",
+                        fontWeight: "600",
+                        fontSize: "0.9rem",
+                        zIndex: 15,
+                        boxShadow: "0 0 15px rgba(157,78,221,0.3)",
+                    }}
+                >
+                    ← Back to Continents
+                </button>
+            )}
+
             {selectedCountry && (
                 <div
                     style={{
@@ -212,10 +581,10 @@ const GlobePage: React.FC = () => {
                         left: "50%",
                         transform: "translateX(-50%)",
                         background:
-                            "linear-gradient(135deg, rgba(0,255,136,0.1) 0%, rgba(0,255,255,0.1) 100%)",
+                            "linear-gradient(135deg, rgba(157,78,221,0.1) 0%, rgba(199,125,255,0.1) 100%)",
                         backdropFilter: "blur(10px)",
-                        border: "1px solid #00ff88",
-                        color: "#00ff88",
+                        border: "1px solid #9d4edd",
+                        color: "#9d4edd",
                         borderRadius: "12px",
                         padding: "12px 24px",
                         fontSize: "1rem",
@@ -226,12 +595,12 @@ const GlobePage: React.FC = () => {
                         boxShadow:
                             "0 0 30px rgba(0,255,136,0.3), inset 0 0 30px rgba(0,255,136,0.1)",
                         fontFamily: "'Courier New', monospace",
-                        textShadow: "0 0 10px #00ff88",
+                        textShadow: "0 0 10px #9d4edd",
                     }}
                 >
                     <span>
                         SECTOR:{" "}
-                        <strong style={{ color: "#00ffff" }}>
+                        <strong style={{ color: "#c77dff" }}>
                             {selectedCountry.properties.name}
                         </strong>
                     </span>
@@ -259,47 +628,112 @@ const GlobePage: React.FC = () => {
                     </button>
                 </div>
             )}
-            <Globe
-                ref={globeRef}
-                globeImageUrl=""
-                backgroundColor="rgba(0,0,0,0)"
-                showGlobe={false}
-                showAtmosphere={false}
-                atmosphereColor="#00ff88"
-                atmosphereAltitude={0.15}
-                polygonsData={polygons}
-                polygonCapColor={(polygon) => {
-                    if (
-                        selectedCountry &&
-                        polygon.properties &&
-                        polygon.properties.iso_a3 ===
-                            selectedCountry.properties.iso_a3
-                    ) {
-                        return "rgba(0, 255, 255, 0.95)"; // Cyber cyan for selected - more opaque
-                    }
-                    return "rgba(0, 255, 136, 0.8)"; // Cyber green - much more opaque
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    height: "100%",
                 }}
-                polygonSideColor={() => "rgba(0, 255, 136, 0.6)"}
-                polygonStrokeColor={(polygon) => {
-                    if (
-                        selectedCountry &&
-                        polygon.properties &&
-                        polygon.properties.iso_a3 ===
-                            selectedCountry.properties.iso_a3
-                    ) {
-                        return "#00ffff"; // Bright cyan for selected
-                    }
-                    return "#00ff88"; // Neon green borders
-                }}
-                onPolygonClick={(polygon) =>
-                    handleCountryClick(polygon as CountryFeature)
-                }
-                polygonLabel={(polygon) =>
-                    `${(polygon as CountryFeature).properties.name}`
-                }
-                width={800}
-                height={800}
-            />
+            >
+                <Globe
+                    ref={globeRef}
+                    globeImageUrl=""
+                    backgroundColor="rgba(0,0,0,0)"
+                    showGlobe={false}
+                    showAtmosphere={false}
+                    atmosphereColor="#9d4edd"
+                    atmosphereAltitude={0.15}
+                    polygonsData={polygons}
+                    polygonCapColor={(polygon) => {
+                        const countryCode =
+                            polygon?.properties?.iso_a3 ||
+                            polygon?.properties?.["ISO3166-1-Alpha-3"];
+                        const continent = getContinent(countryCode);
+
+                        if (viewMode === "continent") {
+                            // Continent mode coloring - all same color unless hovered/selected
+                            if (
+                                hoveredContinent &&
+                                continent === hoveredContinent
+                            ) {
+                                return "rgba(255, 107, 157, 0.9)"; // Bright pink for hovered continent
+                            }
+                            if (
+                                selectedContinent &&
+                                continent === selectedContinent
+                            ) {
+                                return "rgba(157, 78, 221, 0.8)"; // Purple for selected continent
+                            }
+                            // All continents same default color
+                            return "rgba(199, 125, 255, 0.6)"; // Same purple for all continents
+                        } else {
+                            // Country mode coloring
+                            if (
+                                selectedCountry &&
+                                polygon.properties &&
+                                polygon.properties.iso_a3 ===
+                                    selectedCountry.properties.iso_a3
+                            ) {
+                                return "rgba(199, 125, 255, 0.95)"; // Bright purple for selected country
+                            }
+                            if (
+                                selectedContinent &&
+                                continent === selectedContinent
+                            ) {
+                                return "rgba(157, 78, 221, 0.7)"; // Purple for countries in selected continent
+                            }
+                            return "rgba(120, 120, 120, 0.3)"; // Dim gray for other countries
+                        }
+                    }}
+                    polygonSideColor={() => "rgba(157, 78, 221, 0.4)"}
+                    polygonStrokeColor={(polygon) => {
+                        const countryCode =
+                            polygon?.properties?.iso_a3 ||
+                            polygon?.properties?.["ISO3166-1-Alpha-3"];
+                        const continent = getContinent(countryCode);
+
+                        if (viewMode === "continent") {
+                            if (
+                                hoveredContinent &&
+                                continent === hoveredContinent
+                            ) {
+                                return "#c77dff"; // Light purple border for hovered continent
+                            }
+                            return "#9d4edd"; // Purple borders for continents
+                        } else {
+                            if (
+                                selectedCountry &&
+                                polygon.properties &&
+                                polygon.properties.iso_a3 ===
+                                    selectedCountry.properties.iso_a3
+                            ) {
+                                return "#c77dff"; // Bright purple for selected country
+                            }
+                            return "#9d4edd"; // Purple borders for countries
+                        }
+                    }}
+                    onPolygonClick={(polygon) => handleContinentClick(polygon)}
+                    onPolygonHover={(polygon) => handlePolygonHover(polygon)}
+                    polygonLabel={(polygon) => {
+                        const countryCode =
+                            (polygon as any)?.properties?.iso_a3 ||
+                            (polygon as any)?.properties?.["ISO3166-1-Alpha-3"];
+                        const countryName = (polygon as CountryFeature)
+                            .properties.name;
+
+                        if (viewMode === "continent") {
+                            const continent = getContinent(countryCode);
+                            return continent ? `${continent}` : countryName;
+                        } else {
+                            return countryName;
+                        }
+                    }}
+                    width={window.innerWidth}
+                    height={window.innerHeight - 80}
+                />
+            </div>
             <Modal
                 isOpen={modalOpen}
                 onRequestClose={() => setModalOpen(false)}
@@ -316,18 +750,18 @@ const GlobePage: React.FC = () => {
                         background:
                             "linear-gradient(135deg, rgba(0,255,136,0.1) 0%, rgba(0,255,255,0.1) 100%)",
                         backdropFilter: "blur(15px)",
-                        color: "#00ff88",
+                        color: "#9d4edd",
                         borderRadius: "12px",
                         padding: "1.5rem 2rem",
                         boxShadow:
                             "0 0 50px rgba(0,255,136,0.4), inset 0 0 50px rgba(0,255,136,0.1)",
                         textAlign: "center",
-                        border: "1px solid #00ff88",
+                        border: "1px solid #9d4edd",
                         fontSize: "1rem",
                         zIndex: 100,
                         position: "fixed",
                         fontFamily: "'Courier New', monospace",
-                        textShadow: "0 0 10px #00ff88",
+                        textShadow: "0 0 10px #9d4edd",
                     },
                     overlay: {
                         background: "rgba(0,0,0,0.7)",
@@ -343,10 +777,10 @@ const GlobePage: React.FC = () => {
                                 fontWeight: 700,
                                 fontSize: "1.5rem",
                                 marginBottom: 12,
-                                color: "#00ffff",
+                                color: "#c77dff",
                                 textTransform: "uppercase",
                                 letterSpacing: "0.15rem",
-                                textShadow: "0 0 20px #00ffff",
+                                textShadow: "0 0 20px #c77dff",
                             }}
                         >
                             ◉{" "}
@@ -358,12 +792,12 @@ const GlobePage: React.FC = () => {
                             style={{
                                 fontSize: "1rem",
                                 marginBottom: 20,
-                                color: "#00ff88",
+                                color: "#9d4edd",
                             }}
                         >
                             <span style={{ color: "#888" }}>SECTOR CODE:</span>{" "}
                             <span
-                                style={{ color: "#00ffff", fontWeight: "bold" }}
+                                style={{ color: "#c77dff", fontWeight: "bold" }}
                             >
                                 {selectedCountry.properties.iso_a3 || "N/A"}
                             </span>
