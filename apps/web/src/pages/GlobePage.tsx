@@ -263,8 +263,8 @@ const GlobePage: React.FC = () => {
                 ref={globeRef}
                 globeImageUrl=""
                 backgroundColor="rgba(0,0,0,0)"
-                showGlobe={true}
-                showAtmosphere={true}
+                showGlobe={false}
+                showAtmosphere={false}
                 atmosphereColor="#00ff88"
                 atmosphereAltitude={0.15}
                 polygonsData={polygons}
@@ -275,11 +275,11 @@ const GlobePage: React.FC = () => {
                         polygon.properties.iso_a3 ===
                             selectedCountry.properties.iso_a3
                     ) {
-                        return "rgba(0, 255, 255, 0.8)"; // Cyber cyan for selected
+                        return "rgba(0, 255, 255, 0.95)"; // Cyber cyan for selected - more opaque
                     }
-                    return "rgba(0, 255, 136, 0.3)"; // Cyber green
+                    return "rgba(0, 255, 136, 0.8)"; // Cyber green - much more opaque
                 }}
-                polygonSideColor={() => "rgba(0, 255, 136, 0.2)"}
+                polygonSideColor={() => "rgba(0, 255, 136, 0.6)"}
                 polygonStrokeColor={(polygon) => {
                     if (
                         selectedCountry &&
