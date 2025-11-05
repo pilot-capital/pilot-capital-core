@@ -1,0 +1,44 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="95" fill="#f5f0e8" stroke="#4a3728" stroke-width="3"/>
+  
+  <!-- Outer Ring -->
+  <circle cx="100" cy="100" r="85" fill="none" stroke="#4a3728" stroke-width="6"/>
+  
+  <!-- Middle Ring -->
+  <circle cx="100" cy="100" r="65" fill="none" stroke="#d4a574" stroke-width="4"/>
+  
+  <!-- Compass Rose -->
+  <g transform="translate(100,100)">
+    <!-- North Point (Main) -->
+    <path d="M 0,-50 L -8,-20 L 0,-30 L 8,-20 Z" fill="#4a3728"/>
+    
+    <!-- East Point -->
+    <path d="M 50,0 L 20,-8 L 30,0 L 20,8 Z" fill="#4a3728"/>
+    
+    <!-- South Point -->
+    <path d="M 0,50 L -8,20 L 0,30 L 8,20 Z" fill="#4a3728"/>
+    
+    <!-- West Point -->
+    <path d="M -50,0 L -20,-8 L -30,0 L -20,8 Z" fill="#4a3728"/>
+    
+    <!-- Northeast Point -->
+    <path d="M 35,-35 L 15,-25 L 25,-15 L 35,-25 Z" fill="#4a3728"/>
+    
+    <!-- Southeast Point -->
+    <path d="M 35,35 L 25,15 L 15,25 L 25,35 Z" fill="#4a3728"/>
+    
+    <!-- Southwest Point -->
+    <path d="M -35,35 L -25,25 L -15,15 L -25,25 Z" fill="#4a3728"/>
+    
+    <!-- Northwest Point -->
+    <path d="M -35,-35 L -25,-15 L -15,-25 L -25,-35 Z" fill="#4a3728"/>
+    
+    <!-- Center Circle -->
+    <circle cx="0" cy="0" r="6" fill="#4a3728"/>
+  </g>
+  
+  <!-- Decorative inner circles -->
+  <circle cx="100" cy="100" r="20" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <circle cx="100" cy="100" r="10" fill="none" stroke="#d4a574" stroke-width="1"/>
+</svg>

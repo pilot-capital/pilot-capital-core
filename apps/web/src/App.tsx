@@ -1,10 +1,9 @@
-import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import Home from "./pages/Home";
 import { SampleButton } from "./components/SampleButton";
 import { useSample } from "./hooks/useSample";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import GlobePage from "./pages/GlobePage";
 import BlogListPage from "./pages/blog/BlogListPage";
 import BlogCreatePage from "./pages/blog/BlogCreatePage";
@@ -16,6 +15,10 @@ import DashboardPage from "./pages/app/DashboardPage";
 import { useAuth } from "./hooks/authContext";
 import { AuthProvider } from "./hooks/authContext";
 import { Navigate } from "react-router-dom";
+import { AirlinesPage } from "./pages/AirlinesPage";
+import { AirlineDetailPage } from "./pages/AirlineDetailPage";
+import { Navigation } from "./components/Navigation";
+import { CompassLogo } from "./components/CompassLogo";
 
 function App() {
     const { count, increment } = useSample();
@@ -28,228 +31,19 @@ function App() {
 
     return (
         <Router>
-            <nav
-                style={{
-                    background:
-                        "linear-gradient(135deg, #0a0a0a 0%, #2d1b4e 100%)",
-                    borderBottom: "2px solid #9d4edd",
-                    boxShadow: "0 2px 20px rgba(157,78,221,0.2)",
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    width: "100vw",
-                    zIndex: 1000,
-                    padding: "1rem 0",
-                    margin: 0,
-                    borderRadius: 0,
-                }}
-            >
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        width: "100%",
-                        maxWidth: "1400px",
-                        margin: "0 auto",
-                        padding: "0 2rem",
-                    }}
-                >
-                    <Link
-                        to="/"
-                        style={{
-                            textDecoration: "none",
-                            color: "#c77dff",
-                            fontSize: "1.5rem",
-                            fontWeight: "bold",
-                        }}
-                    >
-                        🇰🇾 Pilot Capital
-                    </Link>
-
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: "2rem",
-                            alignItems: "center",
-                            flex: 1,
-                            justifyContent: "center",
-                            marginLeft: "2rem",
-                            marginRight: "2rem",
-                        }}
-                    >
-                        <Link
-                            to="/"
-                            style={{
-                                textDecoration: "none",
-                                color: "#fff",
-                                padding: "0.5rem 1rem",
-                                borderRadius: "20px",
-                                transition: "all 0.3s ease",
-                                border: "1px solid transparent",
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background =
-                                    "rgba(157,78,221,0.2)";
-                                e.currentTarget.style.borderColor = "#9d4edd";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background =
-                                    "transparent";
-                                e.currentTarget.style.borderColor =
-                                    "transparent";
-                            }}
-                        >
-                            Home
-                        </Link>
-
-                        <Link
-                            to="/globe"
-                            style={{
-                                textDecoration: "none",
-                                color: "#fff",
-                                padding: "0.5rem 1rem",
-                                borderRadius: "20px",
-                                transition: "all 0.3s ease",
-                                border: "1px solid transparent",
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background =
-                                    "rgba(157,78,221,0.2)";
-                                e.currentTarget.style.borderColor = "#9d4edd";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background =
-                                    "transparent";
-                                e.currentTarget.style.borderColor =
-                                    "transparent";
-                            }}
-                        >
-                            Globe
-                        </Link>
-
-                        <Link
-                            to="/blog"
-                            style={{
-                                textDecoration: "none",
-                                color: "#fff",
-                                padding: "0.5rem 1rem",
-                                borderRadius: "20px",
-                                transition: "all 0.3s ease",
-                                border: "1px solid transparent",
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background =
-                                    "rgba(157,78,221,0.2)";
-                                e.currentTarget.style.borderColor = "#9d4edd";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background =
-                                    "transparent";
-                                e.currentTarget.style.borderColor =
-                                    "transparent";
-                            }}
-                        >
-                            Blog
-                        </Link>
-
-                        {isAuthenticated && (
-                            <Link
-                                to="/forum"
-                                style={{
-                                    textDecoration: "none",
-                                    color: "#fff",
-                                    padding: "0.5rem 1rem",
-                                    borderRadius: "20px",
-                                    transition: "all 0.3s ease",
-                                    border: "1px solid transparent",
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.background =
-                                        "rgba(157,78,221,0.2)";
-                                    e.currentTarget.style.borderColor =
-                                        "#9d4edd";
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.background =
-                                        "transparent";
-                                    e.currentTarget.style.borderColor =
-                                        "transparent";
-                                }}
-                            >
-                                Forum
-                            </Link>
-                        )}
-
-                        {!isAuthenticated ? (
-                            <Link
-                                to="/login"
-                                style={{
-                                    textDecoration: "none",
-                                    color: "#000",
-                                    background:
-                                        "linear-gradient(135deg, #9d4edd 0%, #c77dff 100%)",
-                                    padding: "0.5rem 1.5rem",
-                                    borderRadius: "25px",
-                                    fontWeight: "600",
-                                    boxShadow: "0 0 15px rgba(157,78,221,0.3)",
-                                    transition: "all 0.3s ease",
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.transform =
-                                        "translateY(-2px)";
-                                    e.currentTarget.style.boxShadow =
-                                        "0 5px 25px rgba(157,78,221,0.4)";
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform =
-                                        "translateY(0)";
-                                    e.currentTarget.style.boxShadow =
-                                        "0 0 15px rgba(157,78,221,0.3)";
-                                }}
-                            >
-                                Login
-                            </Link>
-                        ) : (
-                            <Link
-                                to="/dashboard"
-                                style={{
-                                    textDecoration: "none",
-                                    color: "#c77dff",
-                                    padding: "0.5rem 1rem",
-                                    borderRadius: "20px",
-                                    border: "1px solid #c77dff",
-                                    transition: "all 0.3s ease",
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.background =
-                                        "#c77dff";
-                                    e.currentTarget.style.color = "#000";
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.background =
-                                        "transparent";
-                                    e.currentTarget.style.color = "#c77dff";
-                                }}
-                            >
-                                Dashboard
-                            </Link>
-                        )}
-                    </div>
-                </div>
-            </nav>
-            <div style={{ marginTop: "80px" }}>
+            <Navigation />
+            <div style={{ marginTop: "60px" }}>
                 <Routes>
+                    <Route path="/" element={<Home />} />
                     <Route
-                        path="/"
+                        path="/dev"
                         element={
                             <div className="page-content">
                                 <Helmet>
-                                    <title>🇰🇾 Pilot Capital Main</title>
+                                    <title>🇰🇾 Pilot Capital Dev</title>
                                     <meta
                                         name="description"
-                                        content="Main page of Pilot Capital application"
+                                        content="Dev page of Pilot Capital application"
                                     />
                                 </Helmet>
                                 <div>
@@ -260,15 +54,11 @@ function App() {
                                             alt="Vite logo"
                                         />
                                     </a>
-                                    <a href="https://react.dev" target="_blank">
-                                        <img
-                                            src={reactLogo}
-                                            className="logo react"
-                                            alt="React logo"
-                                        />
-                                    </a>
+                                    <div className="logo">
+                                        <CompassLogo size={64} />
+                                    </div>
                                 </div>
-                                <h1>Vite + React</h1>
+                                <h1>Pilot Capital</h1>
                                 <div className="card">
                                     <SampleButton label="This is the sample button man!" />
                                     <button
@@ -338,14 +128,6 @@ function App() {
                         }
                     />
                     <Route
-                        path="/landing"
-                        element={
-                            <div className="page-content">
-                                <LandingPage />
-                            </div>
-                        }
-                    />
-                    <Route
                         path="/forum"
                         element={
                             <div className="page-content">
@@ -363,8 +145,27 @@ function App() {
                             </div>
                         }
                     />
+                    <Route
+                        path="/airlines"
+                        element={
+                            <div className="page-content">
+                                <AirlinesPage />
+                            </div>
+                        }
+                    />
+                    <Route
+                        path="/airlines/:id"
+                        element={
+                            <div className="page-content">
+                                <AirlineDetailPage />
+                            </div>
+                        }
+                    />
                 </Routes>
             </div>
+            <Routes>
+                <Route path="/landing" element={<LandingPage />} />
+            </Routes>
         </Router>
     );
 }
