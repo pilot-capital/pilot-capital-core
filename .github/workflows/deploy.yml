@@ -1,0 +1,59 @@
+name: Deploy to VPS
+
+on:
+    push:
+        branches: [main, master]
+    pull_request:
+        branches: [main, master]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+
+            - name: Install frontend dependencies
+              run: |
+                  cd apps/web
+                  pnpm install --frozen-lockfile
+
+            - name: Build frontend
+              run: |
+                  cd apps/web
+                  pnpm run build
+
+            - name: Deploy to VPS
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.VPS_HOST }}
+                  username: ${{ secrets.VPS_USER }}
+                  key: ${{ secrets.VPS_SSH_KEY }}
+                  script: |
+                      cd /var/www/pilot-capital
+
+                      # Run deployment script
+                      chmod +x scripts/deploy.sh
+                      ./scripts/deploy.sh
+
+            - name: Cleanup old Docker images
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.VPS_HOST }}
+                  username: ${{ secrets.VPS_USER }}
+                  key: ${{ secrets.VPS_SSH_KEY }}
+                  script: |
+                      # Clean up old Docker images to save space
+                      docker system prune -f
+                      docker image prune -f

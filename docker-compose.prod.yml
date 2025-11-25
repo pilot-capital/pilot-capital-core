@@ -1,0 +1,75 @@
+version: "3.8"
+
+services:
+    # PostgreSQL Database
+    db:
+        image: postgres:15-alpine
+        environment:
+            POSTGRES_DB: pilot_capital
+            POSTGRES_USER: pilot_user
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        networks:
+            - pilot_network
+        restart: unless-stopped
+
+    # Django Backend
+    backend:
+        build:
+            context: ./apps/api
+            dockerfile: Dockerfile
+        environment:
+            - DEBUG=False
+            - SECRET_KEY=${SECRET_KEY}
+            - DATABASE_URL=postgresql://pilot_user:${DB_PASSWORD}@db:5432/pilot_capital
+            - ALLOWED_HOSTS=pilot.lingano.live,localhost,127.0.0.1
+            - CORS_ALLOWED_ORIGINS=https://pilot.lingano.live,http://localhost:3000
+        ports:
+            - "3002:8000" # Use port 3002 for backend API
+        volumes:
+            - static_volume:/app/staticfiles
+            - media_volume:/app/media
+        depends_on:
+            - db
+        networks:
+            - pilot_network
+        restart: unless-stopped
+        command: >
+            sh -c "python manage.py migrate &&
+                   python manage.py collectstatic --noinput &&
+                   gunicorn --bind 0.0.0.0:8000 PCCore.wsgi:application"
+
+    # React Frontend
+    frontend:
+        build:
+            context: ./apps/web
+            dockerfile: Dockerfile
+        ports:
+            - "3001:80" # Use port 3001 for this app
+        volumes:
+            - static_volume:/var/www/static
+        depends_on:
+            - backend
+        networks:
+            - pilot_network
+        restart: unless-stopped
+
+    # Redis (for caching and sessions)
+    redis:
+        image: redis:7-alpine
+        volumes:
+            - redis_data:/data
+        networks:
+            - pilot_network
+        restart: unless-stopped
+
+volumes:
+    postgres_data:
+    static_volume:
+    media_volume:
+    redis_data:
+
+networks:
+    pilot_network:
+        driver: bridge
