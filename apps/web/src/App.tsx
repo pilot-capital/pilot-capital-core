@@ -34,7 +34,7 @@ function App() {
             <Navigation />
             <div style={{ marginTop: "60px" }}>
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={<LandingPage />} />
                     <Route
                         path="/dev"
                         element={
